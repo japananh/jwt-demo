@@ -22,14 +22,20 @@ function loginValidation(dataObject) {
   return schema.validate(dataObject);
 }
 
-async function bycryptData(string) {
+async function encryptData(string) {
   const salt = await bycrypt.genSalt(10);
   const hashedString = await bycrypt.hash(string, salt);
   return hashedString;
 }
 
+async function decryptData(string, hashedString) {
+  const isValid = await bycrypt.compare(string, hashedString);
+  return isValid;
+}
+
 module.exports = {
   loginValidation,
   registerValidation,
-  bycryptData,
+  encryptData,
+  decryptData,
 };
