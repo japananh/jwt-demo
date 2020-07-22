@@ -9,16 +9,25 @@ const authRoute = require("./routes/auth");
 dotenv.config();
 
 // Connect to database
-mongoose.connect(
-  process.env.DB_CONNECT,
-  { useUnifiedTopology: true, useNewUrlParser: true },
-  () => console.log("connect to db")
-);
+mongoose
+  .connect(process.env.DB_CONNECT, {
+    useUnifiedTopology: true,
+    useNewUrlParser: true,
+  })
+  .then(() => {
+    console.log("Successfully connect to MongoDB.");
+  })
+  .catch((err) => {
+    console.log("Connection Error.", err);
+    process.exit();
+  });
 
 // Middleware
+app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-// Route Middlewares
+// Routes
 app.use("/api/user", authRoute);
 
-app.listen(5000, () => console.log("Server is running on port 5000."));
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server is running on port ${PORT}.`));
